@@ -1,0 +1,29 @@
+# docker-composeのバージョン
+version: "3" 
+
+services:
+  # コンテナの作成
+  web:
+    build: .
+    # このコンテナで使用するDockerイメージの指定
+    image: "php:8.1-apache"
+    volumes:
+      - ./config/php/php.ini:/usr/local/etc/php/php.ini
+      - "./src:/var/www/html"
+    # ホスト側のポート:コンテナ側のポートを指定
+    ports:
+      - "8080:80"
+
+  db:
+    image: mysql:8
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./config/mysql/my.cnf/my.conf:/etc/mysql/conf.d/my.cnf
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=test_db
+      - MYSQL_USER=test_user
+      - MYSQL_PASSWORD=test_password
+    ports:
+      - "4306:3306"
+    container_name: "db"
